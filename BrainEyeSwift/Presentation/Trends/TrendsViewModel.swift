@@ -11,6 +11,7 @@ class TrendsViewModel: ObservableObject {
     
     @Published var accuracyTrend: Trend? = nil
     @Published var reactionTimeTrend: Trend? = nil
+    @Published var state: ViewState = .loading
 
     private var task: Task<Void, Never>? = nil
     
@@ -25,11 +26,15 @@ class TrendsViewModel: ObservableObject {
     private func getTrends() {
         task = Task {
             let result = await GetTrendsUseCase().invoke()
+            
             switch result {
+                
             case .success(let value):
                 await handleTrendsResult(value)
+                await updateState(.loaded)
+                
             case .failure(_):
-                print("Something went wrong")
+                await updateState(.error)
             }
         }
     }
@@ -46,5 +51,10 @@ class TrendsViewModel: ObservableObject {
             accuracyTrend = accuracy
             reactionTimeTrend = reactionTime
         }
+    }
+    
+    @MainActor
+    private func updateState(_ state: ViewState) async {
+        self.state = state
     }
 }

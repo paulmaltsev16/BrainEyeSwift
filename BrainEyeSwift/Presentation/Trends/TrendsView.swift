@@ -7,59 +7,74 @@
 
 import SwiftUI
 
-enum TrendType: String {
-    case accuracy = "Accuracy"
-    case responseTime = "Response Time"
-}
-
 struct TrendsView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @ObservedObject private var viewModel = TrendsViewModel()
-    @State private var selectedTab: TrendType = .accuracy
     
     var body: some View {
         NavigationView {
             VStack {
-                Picker("Tabs", selection: $selectedTab) {
-                    Text(TrendType.accuracy.rawValue).tag(TrendType.accuracy)
-                    Text(TrendType.responseTime.rawValue).tag(TrendType.responseTime)
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .padding()
-                
-                Spacer()
-                
-                switch selectedTab {
+                switch viewModel.state {
                     
-                case .accuracy:
-                    TrendDetailsView(
-                        trendType: .accuracy,
-                        trend: viewModel.accuracyTrend
+                case .loading:
+                    ProgressView()
+                    
+                case .loaded:
+                    ContentView(
+                        accuracyTrend: viewModel.accuracyTrend,
+                        reactionTimeTrend: viewModel.reactionTimeTrend
                     )
-                case .responseTime:
-                    TrendDetailsView(
-                        trendType: .responseTime,
-                        trend: viewModel.reactionTimeTrend
-                    )
+                    
+                case .error:
+                    Text("Unable to download data. Please check your internet connection and try again.")
                 }
-                
-                Spacer()
             }
             .navigationTitle("Trends")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     }) {
-                        Image(systemName: "chevron.left")
+                        Image(systemName: "arrow.backward")
                             .foregroundColor(.primary)
                     }
                 }
             }
         }
         .padding()
+    }
+}
+
+private struct ContentView: View {
+    
+    @State private var selectedTab: TrendType = .accuracy
+    
+    let accuracyTrend: Trend?
+    let reactionTimeTrend: Trend?
+    
+    var body: some View {
+        Picker("Tabs", selection: $selectedTab) {
+            Text(TrendType.accuracy.rawValue).tag(TrendType.accuracy)
+            Text(TrendType.responseTime.rawValue).tag(TrendType.responseTime)
+        }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding()
+        
+        switch selectedTab {
+            
+        case .accuracy:
+            TrendDetailsView(
+                trendType: .accuracy,
+                trend: accuracyTrend
+            )
+        case .responseTime:
+            TrendDetailsView(
+                trendType: .responseTime,
+                trend: reactionTimeTrend
+            )
+        }
     }
 }
 
