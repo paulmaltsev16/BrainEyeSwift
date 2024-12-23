@@ -11,7 +11,7 @@ import SwiftUI
 struct BrainEyeSwiftApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TrendsView()
         }
     }
 }
