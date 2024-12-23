@@ -9,41 +9,36 @@ import SwiftUI
 
 struct TrendsView: View {
     
-    @Environment(\.dismiss) var dismiss
     @ObservedObject private var viewModel = TrendsViewModel()
     
     var body: some View {
-        NavigationView {
-            VStack {
-                switch viewModel.state {
-                    
-                case .loading:
-                    ProgressView()
-                    
-                case .loaded:
-                    ContentView(
-                        accuracyTrend: viewModel.accuracyTrend,
-                        reactionTimeTrend: viewModel.reactionTimeTrend
-                    )
-                    
-                case .error:
-                    Text("Unable to download data. Please check your internet connection and try again.")
-                }
+        VStack {
+            switch viewModel.state {
+                
+            case .loading:
+                ProgressView()
+                
+            case .loaded:
+                ContentView(
+                    accuracyTrend: viewModel.accuracyTrend,
+                    reactionTimeTrend: viewModel.reactionTimeTrend
+                )
+                
+            case .error:
+                Text("Unable to download data. Please check your internet connection and try again.")
             }
-            .navigationTitle("Trends")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        dismiss()
-                    }) {
-                        Image(systemName: "arrow.backward")
-                            .foregroundColor(.primary)
-                    }
+        }
+        .navigationTitle("Trends")
+        .navigationBarTitleDisplayMode(.inline)
+        .padding()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { exit(0) }) {
+                    Image(systemName: "arrow.backward")
+                        .foregroundColor(.primary)
                 }
             }
         }
-        .padding()
     }
 }
 
