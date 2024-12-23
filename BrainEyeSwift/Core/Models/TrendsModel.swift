@@ -35,4 +35,9 @@ struct ScorePoint: Decodable {
 
 struct Range: Decodable {
     let lowerBound, upperBound: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case lowerBound = "lower_bound"
+        case upperBound = "upper_bound"
+    }
 }
