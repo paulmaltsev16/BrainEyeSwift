@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Charts
 
 private let normalRangeColor = Color.gray.opacity(0.2)
 
@@ -13,67 +14,32 @@ struct GraphView: View {
     
     let title: String
     let subTitle: String
-    let data: [Int]
-    let normalRange: (Int, Int)
+    let unit: String
+    
+    let normalRange: Range
+    let scoreRange: Range
+    let scorePoints: [ScorePoint]
+    let trendLines: [ScorePoint]
     
     var body: some View {
         VStack {
             GraphTitleView(
-                title: title,
+                title: "\(title) (\(unit))",
                 subTitle: subTitle
             )
             
-            GeometryReader { geometry in
-                ZStack {
-                    // Normal range area
-                    Rectangle()
-                        .fill(normalRangeColor)
-                        .frame(
-                            height: geometry.size.height * 0.5,
-                            alignment: .center
-                        )
-                    
-                    // Graph line and data points
-                    Path { path in
-                        let widthStep = geometry.size.width / CGFloat(data.count - 1)
-                        let height = geometry.size.height
-                        
-                        for (index, value) in data.enumerated() {
-                            let x = CGFloat(index) * widthStep
-                            let y = height - (CGFloat(value - normalRange.0) / CGFloat(normalRange.1 - normalRange.0) * height)
-                            
-                            if index == 0 {
-                                path.move(to: CGPoint(x: x, y: y))
-                            } else {
-                                path.addLine(to: CGPoint(x: x, y: y))
-                            }
-                        }
-                    }
-                    .stroke(Color.blue, lineWidth: 2)
-                    
-                    // Data points
-                    ForEach(0..<data.count, id: \.self) { index in
-                        let widthStep = geometry.size.width / CGFloat(data.count - 1)
-                        let height = geometry.size.height
-                        let x = CGFloat(index) * widthStep
-                        let y = height - (CGFloat(data[index] - normalRange.0) / CGFloat(normalRange.1 - normalRange.0) * height)
-                        
-                        Circle()
-                            .fill(Color.blue)
-                            .frame(width: 8, height: 8)
-                            .position(x: x, y: y)
-                    }
-                }
-            }
-            .frame(height: 200)
+            GraphContentView(
+                normalRange: normalRange,
+                scoreRange: scoreRange,
+                scorePoints: scorePoints,
+                trendLines: trendLines
+            )
             
             GraphLegend()
                 .padding([.top], 20)
         }
-        .padding()
     }
 }
-
 
 private struct GraphTitleView: View {
     
@@ -90,6 +56,42 @@ private struct GraphTitleView: View {
                 .font(.subheadline)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
+    }
+}
+
+private struct GraphContentView: View {
+    
+    let normalRange: Range
+    let scoreRange: Range
+    let scorePoints: [ScorePoint]
+    let trendLines: [ScorePoint]
+    
+    var body: some View {
+        Chart {
+            ForEach(trendLines, id: \.value) { item in
+                LineMark(
+                    x: .value("line-x", item.timestamp ?? 0),
+                    y: .value("line-y", item.value ?? 0)
+                )
+            }
+            
+            ForEach(scorePoints, id: \.value) { item in
+                PointMark(
+                    x: .value("point-x", item.timestamp ?? 0),
+                    y: .value("point-y", item.value ?? 0)
+                )
+            }
+            
+            RectangleMark(
+                yStart: .value("mark-start-y", normalRange.lowerBound ?? 0),
+                yEnd: .value("mark-end-y", normalRange.upperBound ?? 0)
+            )
+            .foregroundStyle(normalRangeColor)
+        }
+        .aspectRatio(1, contentMode: .fit)
+        .chartYScale(domain: scoreRange.domain)
+        .chartXScale(domain: trendLines.domain)
+        .chartXAxis(.hidden)
     }
 }
 
@@ -111,10 +113,29 @@ private struct GraphLegend: View {
 }
 
 #Preview {
+    let scorePoints: [ScorePoint] = [
+        ScorePoint(value: 85, timestamp: 1689188395.0),
+        ScorePoint(value: 59, timestamp: 1690468898.0),
+        ScorePoint(value: 78, timestamp: 1690987416.0),
+        ScorePoint(value: 47, timestamp: 1691330551.0),
+        ScorePoint(value: 89, timestamp: 1691492358.0),
+    ]
+    
+    let trendLines: [ScorePoint] = [
+        ScorePoint(value: 85, timestamp: 1689188395.0),
+        ScorePoint(value: 83, timestamp: 1690468898.0),
+        ScorePoint(value: 82, timestamp: 1690987416.0),
+        ScorePoint(value: 78, timestamp: 1691330551.0),
+        ScorePoint(value: 81, timestamp: 1691492358.0),
+    ]
+    
     GraphView(
         title: "Accuracy",
-        subTitle: "Jun-Jul 2024",
-        data: [100, 200, 50],
-        normalRange: (30, 50)
+        subTitle: "Jan-Jul 2024",
+        unit: "%",
+        normalRange: Range(lowerBound: 50, upperBound: 100),
+        scoreRange: Range(lowerBound: 5, upperBound: 100),
+        scorePoints: scorePoints,
+        trendLines: trendLines
     )
 }
