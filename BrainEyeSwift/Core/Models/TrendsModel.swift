@@ -47,9 +47,11 @@ struct NormalRange: Decodable {
     }
 }
 
-struct ScorePoint: Decodable {
+struct ScorePoint: Decodable, Identifiable {
     let value: Int?
     let timestamp: TimeInterval?
+    
+    var id: TimeInterval { timestamp ?? 0 }
 }
 
 struct Range: Decodable {

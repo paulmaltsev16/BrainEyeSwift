@@ -27,4 +27,10 @@ extension Array<ScorePoint> {
         
         return "\(firstMonth)-\(lastMonth) \(year)"
     }
+    
+    var domain: ClosedRange<Double> {
+        let minTimestamp = self.min { ($0.timestamp ?? 0) <= ($1.timestamp ?? 0) }?.timestamp ?? 0.0
+        let maxTimestamp = self.max { ($0.timestamp ?? 0) < ($1.timestamp ?? 0) }?.timestamp ?? 0.0
+        return minTimestamp...maxTimestamp
+    }
 }
