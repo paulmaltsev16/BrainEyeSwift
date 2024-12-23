@@ -16,10 +16,13 @@ struct TrendDetailsView: View {
         VStack {
             if let trend {
                 GraphView(
-                    title: "\(trendType.rawValue) (\(trend.unit?.unitDisplayType ?? ""))",
+                    title: trendType.rawValue,
                     subTitle: trend.scorePoints?.measurePeriod ?? "",
-                    data: [1,10,3],
-                    normalRange: (0, 100)
+                    unit: trend.unit?.unitDisplayType ?? "",
+                    normalRange: trend.normalRanges!.first!.range!, // According to the assignment, take the first one.
+                    scoreRange: trend.scoreRange ?? Range(lowerBound: 0, upperBound: 0),
+                    scorePoints: trend.scorePoints ?? [],
+                    trendLines: trend.trendLine ?? []
                 )
                 .frame(maxHeight: .infinity)
                 
@@ -29,8 +32,7 @@ struct TrendDetailsView: View {
                         unit: trend.unit?.unitDisplayType ?? ""
                     )
                 }
-            }
-            else {
+            } else {
                 Text("Oops! Something went wrong. \nWe’re unable to provide \(trendType.rawValue.lowercased()) information right now.")
                     .font(.footnote)
                     .multilineTextAlignment(.center)
