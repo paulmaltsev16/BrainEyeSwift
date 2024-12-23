@@ -18,6 +18,7 @@ struct InsightsView: View {
             Text("Insights")
                 .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
+                .bold()
             
             HStack {
                 InsightItem(
