@@ -25,7 +25,7 @@ struct Trend: Decodable {
         case scorePoints = "score_points"
         case scoreRange = "score_range"
         case scoreType = "score_type"
-        case trendLine
+        case trendLine = "trend_line"
         case insight
         case unit
     }
