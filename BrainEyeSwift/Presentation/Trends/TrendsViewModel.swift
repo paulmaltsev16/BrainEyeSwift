@@ -9,7 +9,6 @@ import Foundation
 
 class TrendsViewModel: ObservableObject {
     
-    
     @Published var accuracyTrend: Trend? = nil
     @Published var reactionTimeTrend: Trend? = nil
 
@@ -17,6 +16,10 @@ class TrendsViewModel: ObservableObject {
     
     init() {
         getTrends()
+    }
+    
+    deinit {
+        task?.cancel()
     }
     
     private func getTrends() {
