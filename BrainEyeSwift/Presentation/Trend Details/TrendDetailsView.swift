@@ -14,7 +14,9 @@ struct TrendDetailsView: View {
     
     var body: some View {
         VStack {
-            if let trend {
+            if let trend,
+               let insight = trend.insight
+            {
                 GraphView(
                     title: trendType.rawValue,
                     subTitle: trend.scorePoints?.measurePeriod ?? "",
@@ -26,12 +28,10 @@ struct TrendDetailsView: View {
                 )
                 .frame(maxHeight: .infinity)
                 
-                if let insight = trend.insight {
-                    InsightsView(
-                        insight: insight,
-                        unit: trend.unit?.unitDisplayType ?? ""
-                    )
-                }
+                InsightsView(
+                    insight: insight,
+                    unit: trend.unit?.unitDisplayType ?? ""
+                )
             } else {
                 Text("Oops! Something went wrong. \nWe’re unable to provide \(trendType.rawValue.lowercased()) information right now.")
                     .font(.footnote)
