@@ -19,7 +19,6 @@ struct InsightsView: View {
                 .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
             
-            
             HStack {
                 InsightItem(
                     title:"Latest",
@@ -27,15 +26,11 @@ struct InsightsView: View {
                     unit: unit
                 )
                 
-                Spacer()
-                
                 InsightItem(
                     title: "Average",
                     value: "\(insight.average ?? 0)",
                     unit: unit
                 )
-                
-                Spacer()
                 
                 InsightItem(
                     title: "Range",
@@ -46,7 +41,6 @@ struct InsightsView: View {
             .padding()
             .background(Color.gray.opacity(0.1))
             .cornerRadius(12)
-            
         }
     }
 }
@@ -64,6 +58,7 @@ private struct InsightItem: View {
             Text(value + unit)
                 .font(.headline)
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
