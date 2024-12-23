@@ -21,13 +21,13 @@ struct Trend: Decodable {
     let trendLine: [ScorePoint]?
     
     enum CodingKeys: String, CodingKey {
-        case scoreRange = "score_range"
         case normalRanges = "normal_ranges"
-        case unit
-        case scoreType
-        case insight
-        case scorePoints
+        case scorePoints = "score_points"
+        case scoreRange = "score_range"
+        case scoreType = "score_type"
         case trendLine
+        case insight
+        case unit
     }
 }
 
@@ -49,7 +49,7 @@ struct NormalRange: Decodable {
 
 struct ScorePoint: Decodable {
     let value: Int?
-    let timestamp: Int?
+    let timestamp: TimeInterval?
 }
 
 struct Range: Decodable {
