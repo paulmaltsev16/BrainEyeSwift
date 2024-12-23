@@ -13,32 +13,41 @@ struct InsightsView: View {
     let unit: String
     
     var body: some View {
-        HStack {
-            InsightItem(
-                title:"Latest",
-                value: "\(insight.latest ?? 0)",
-                unit: unit
-            )
+        VStack {
             
-            Spacer()
+            Text("Insights")
+                .font(.title2)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
-            InsightItem(
-                title: "Average",
-                value: "\(insight.average ?? 0)",
-                unit: unit
-            )
             
-            Spacer()
+            HStack {
+                InsightItem(
+                    title:"Latest",
+                    value: "\(insight.latest ?? 0)",
+                    unit: unit
+                )
+                
+                Spacer()
+                
+                InsightItem(
+                    title: "Average",
+                    value: "\(insight.average ?? 0)",
+                    unit: unit
+                )
+                
+                Spacer()
+                
+                InsightItem(
+                    title: "Range",
+                    value: insight.range?.displayedTitle ?? "-",
+                    unit: unit
+                )
+            }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(12)
             
-            InsightItem(
-                title: "Range",
-                value: insight.range?.displayedTitle ?? "-",
-                unit: unit
-            )
         }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .cornerRadius(12)
     }
 }
 
