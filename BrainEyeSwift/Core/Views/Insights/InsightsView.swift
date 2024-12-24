@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+private let dividerHeight: CGFloat = 50
+
 struct InsightsView: View {
     
     let insight: Insight
@@ -14,7 +16,6 @@ struct InsightsView: View {
     
     var body: some View {
         VStack {
-            
             Text("Insights")
                 .font(.title2)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -27,11 +28,17 @@ struct InsightsView: View {
                     unit: unit
                 )
                 
+                Divider()
+                    .frame(height: dividerHeight)
+                
                 InsightItem(
                     title: "Average",
                     value: "\(insight.average ?? 0)",
                     unit: unit
                 )
+                
+                Divider()
+                    .frame(height: dividerHeight)
                 
                 InsightItem(
                     title: "Range",
@@ -40,13 +47,16 @@ struct InsightsView: View {
                 )
             }
             .padding()
-            .background(Color.gray.opacity(0.1))
+            .background(Color.gray.opacity(0.3))
             .cornerRadius(12)
         }
     }
 }
 
 private struct InsightItem: View {
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+
     let title: String
     let value: String
     let unit: String
@@ -57,6 +67,7 @@ private struct InsightItem: View {
                 .font(.caption)
             
             Text(value + unit)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
                 .font(.headline)
         }
         .frame(maxWidth: .infinity)
