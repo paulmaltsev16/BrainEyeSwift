@@ -12,54 +12,12 @@ private let normalRangeColor = Color.gray.opacity(0.2)
 
 struct GraphView: View {
     
+    // Graph description.
     let title: String
     let subTitle: String
     let unit: String
     
-    let normalRange: Range
-    let scoreRange: Range
-    let scorePoints: [ScorePoint]
-    let trendLines: [ScorePoint]
-    
-    var body: some View {
-        VStack {
-            GraphTitleView(
-                title: "\(title) (\(unit))",
-                subTitle: subTitle
-            )
-            
-            GraphContentView(
-                unit: unit,
-                normalRange: normalRange,
-                scoreRange: scoreRange,
-                scorePoints: scorePoints,
-                trendLines: trendLines
-            )  
-        }
-    }
-}
-
-private struct GraphTitleView: View {
-    
-    let title: String
-    let subTitle: String
-    
-    var body: some View {
-        VStack {
-            Text(title)
-                .font(.title2)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Text(subTitle)
-                .font(.subheadline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-    }
-}
-
-private struct GraphContentView: View {
-    
-    let unit: String
+    // Graph values.
     let normalRange: Range
     let scoreRange: Range
     let scorePoints: [ScorePoint]
@@ -90,14 +48,40 @@ private struct GraphContentView: View {
         .aspectRatio(1, contentMode: .fit)
         .chartYScale(domain: scoreRange.domain)
         .chartXScale(domain: trendLines.domain)
-        .chartYAxisLabel(unit)
         .chartXAxis(.hidden)
+        .chartYAxisLabel {
+            GraphTitleView(
+                unit: unit,
+                title: title,
+                subTitle: subTitle
+            )
+        }
         .chartXAxisLabel {
             GraphLegend()
                 .padding([.top], 20)
         }
         .chartYAxis {
             AxisMarks(position: .leading)
+        }
+    }
+}
+
+private struct GraphTitleView: View {
+    
+    let unit: String
+    let title: String
+    let subTitle: String
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text("\(title) (\(unit))")
+                .font(.title2)
+            
+            Text(subTitle)
+                .font(.subheadline)
+            
+            Text(unit)
+                .font(.footnote)
         }
     }
 }
