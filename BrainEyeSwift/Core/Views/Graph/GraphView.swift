@@ -29,14 +29,12 @@ struct GraphView: View {
             )
             
             GraphContentView(
+                unit: unit,
                 normalRange: normalRange,
                 scoreRange: scoreRange,
                 scorePoints: scorePoints,
                 trendLines: trendLines
-            )
-            
-            GraphLegend()
-                .padding([.top], 20)
+            )  
         }
     }
 }
@@ -61,6 +59,7 @@ private struct GraphTitleView: View {
 
 private struct GraphContentView: View {
     
+    let unit: String
     let normalRange: Range
     let scoreRange: Range
     let scorePoints: [ScorePoint]
@@ -91,8 +90,15 @@ private struct GraphContentView: View {
         .aspectRatio(1, contentMode: .fit)
         .chartYScale(domain: scoreRange.domain)
         .chartXScale(domain: trendLines.domain)
+        .chartYAxisLabel(unit)
         .chartXAxis(.hidden)
-        .chartYAxis {AxisMarks(position: .leading)}
+        .chartXAxisLabel {
+            GraphLegend()
+                .padding([.top], 20)
+        }
+        .chartYAxis {
+            AxisMarks(position: .leading)
+        }
     }
 }
 
