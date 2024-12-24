@@ -29,14 +29,14 @@ struct GraphView: View {
         Chart {
             ForEach(trendLines, id: \.value) { item in
                 LineMark(
-                    x: .value("line-x", item.timestamp ?? 0),
+                    x: .value("line-x", item.timestamp?.dayAndMonth ?? ""),
                     y: .value("line-y", item.value ?? 0)
                 )
             }
             
             ForEach(scorePoints, id: \.value) { item in
                 PointMark(
-                    x: .value("point-x", item.timestamp ?? 0),
+                    x: .value("point-x", item.timestamp?.dayAndMonth ?? ""),
                     y: .value("point-y", item.value ?? 0)
                 )
                 .foregroundStyle(colorScheme == .dark ? .white : .black.opacity(0.6))
@@ -49,8 +49,7 @@ struct GraphView: View {
             .foregroundStyle(normalRangeColor)
         }
         .aspectRatio(1, contentMode: .fit)
-        .chartYScale(domain: scoreRange.domain)
-        .chartXScale(domain: trendLines.domain)
+        .chartYScale(domain: .automatic)
         .chartXAxis(.hidden)
         .chartYAxisLabel {
             GraphTitleView(
