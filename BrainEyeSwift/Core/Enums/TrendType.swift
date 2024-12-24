@@ -7,7 +7,8 @@
 
 import Foundation
 
-enum TrendType: String {
+enum TrendType: String, CaseIterable, Identifiable {
+    var id: String { self.rawValue }
     case accuracy = "Accuracy"
     case responseTime = "Response Time"
 }

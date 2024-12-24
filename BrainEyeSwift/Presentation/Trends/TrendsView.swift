@@ -44,20 +44,22 @@ struct TrendsView: View {
 
 private struct ContentView: View {
     
+    private static let pickerStringKey = "Tabs"
     @State private var selectedTab: TrendType = .accuracy
     
     let accuracyTrend: Trend?
     let reactionTimeTrend: Trend?
     
     var body: some View {
-        Picker("Tabs", selection: $selectedTab) {
-            Text(TrendType.accuracy.rawValue).tag(TrendType.accuracy)
-            Text(TrendType.responseTime.rawValue).tag(TrendType.responseTime)
+        Picker(ContentView.pickerStringKey, selection: $selectedTab) {
+            ForEach(TrendType.allCases) { type in
+                Text(type.rawValue).tag(type)
+            }
         }
         .pickerStyle(SegmentedPickerStyle())
         .frame(maxHeight: 55)
-        .clipShape(RoundedRectangle(cornerRadius: 15))
-
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        
         switch selectedTab {
             
         case .accuracy:
@@ -65,6 +67,7 @@ private struct ContentView: View {
                 trendType: .accuracy,
                 trend: accuracyTrend
             )
+            
         case .responseTime:
             TrendDetailsView(
                 trendType: .responseTime,
