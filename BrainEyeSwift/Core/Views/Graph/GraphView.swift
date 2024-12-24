@@ -76,6 +76,7 @@ private struct GraphTitleView: View {
         VStack(alignment: .leading) {
             Text("\(title) (\(unit))")
                 .font(.title2)
+                .foregroundColor(.white)
             
             Text(subTitle)
                 .font(.subheadline)
