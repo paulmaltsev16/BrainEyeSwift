@@ -92,6 +92,7 @@ private struct GraphContentView: View {
         .chartYScale(domain: scoreRange.domain)
         .chartXScale(domain: trendLines.domain)
         .chartXAxis(.hidden)
+        .chartYAxis {AxisMarks(position: .leading)}
     }
 }
 
