@@ -55,8 +55,9 @@ private struct ContentView: View {
             Text(TrendType.responseTime.rawValue).tag(TrendType.responseTime)
         }
         .pickerStyle(SegmentedPickerStyle())
-        .padding()
-        
+        .frame(maxHeight: 55)
+        .clipShape(RoundedRectangle(cornerRadius: 15))
+
         switch selectedTab {
             
         case .accuracy:
