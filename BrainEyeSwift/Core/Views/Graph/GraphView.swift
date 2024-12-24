@@ -12,6 +12,8 @@ private let normalRangeColor = Color.gray.opacity(0.2)
 
 struct GraphView: View {
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     // Graph description.
     let title: String
     let subTitle: String
@@ -37,6 +39,7 @@ struct GraphView: View {
                     x: .value("point-x", item.timestamp ?? 0),
                     y: .value("point-y", item.value ?? 0)
                 )
+                .foregroundStyle(colorScheme == .dark ? .white : .black.opacity(0.6))
             }
             
             RectangleMark(
@@ -68,6 +71,8 @@ struct GraphView: View {
 
 private struct GraphTitleView: View {
     
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+
     let unit: String
     let title: String
     let subTitle: String
@@ -76,7 +81,7 @@ private struct GraphTitleView: View {
         VStack(alignment: .leading) {
             Text("\(title) (\(unit))")
                 .font(.title2)
-                .foregroundColor(.white)
+                .foregroundColor(colorScheme == .dark ? .white : .black)
             
             Text(subTitle)
                 .font(.subheadline)
