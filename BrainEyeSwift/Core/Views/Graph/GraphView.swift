@@ -60,6 +60,11 @@ struct GraphView: View {
                 AxisGridLine()
             }
         }
+        .chartXAxis {
+            AxisMarks(values: .automatic(desiredCount: 3)) {
+                AxisValueLabel(format: CustomDateStyle())
+            }
+        }
         .chartYAxisLabel {
             GraphTitleView(
                 unit: unit,
