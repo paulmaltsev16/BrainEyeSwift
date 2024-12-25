@@ -30,7 +30,6 @@ struct TrendsView: View {
         }
         .navigationTitle("Trends")
         .navigationBarTitleDisplayMode(.inline)
-        .padding()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { exit(0) }) {
@@ -51,28 +50,33 @@ private struct ContentView: View {
     let reactionTimeTrend: Trend?
     
     var body: some View {
-        Picker(ContentView.pickerStringKey, selection: $selectedTab) {
-            ForEach(TrendType.allCases) { type in
-                Text(type.rawValue).tag(type)
+        VStack {
+            Picker(ContentView.pickerStringKey, selection: $selectedTab) {
+                ForEach(TrendType.allCases, id: \.self) { type in
+                    Text(type.rawValue).tag(type)
+                }
             }
-        }
-        .pickerStyle(SegmentedPickerStyle())
-        .frame(maxHeight: 55)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-        
-        switch selectedTab {
+            .pickerStyle(SegmentedPickerStyle())
+            .frame(maxHeight: 55)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .padding()
             
-        case .accuracy:
-            TrendDetailsView(
-                trendType: .accuracy,
-                trend: accuracyTrend
-            )
-            
-        case .responseTime:
-            TrendDetailsView(
-                trendType: .responseTime,
-                trend: reactionTimeTrend
-            )
+            TabView(selection: $selectedTab) {
+                TrendDetailsView(
+                    trendType: .accuracy,
+                    trend: accuracyTrend
+                )
+                .padding()
+                .tag(TrendType.accuracy)
+                
+                TrendDetailsView(
+                    trendType: .responseTime,
+                    trend: reactionTimeTrend
+                )
+                .padding()
+                .tag(TrendType.responseTime)
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
     }
 }
