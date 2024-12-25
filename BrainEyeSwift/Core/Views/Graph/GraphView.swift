@@ -18,6 +18,7 @@ struct GraphView: View {
     let title: String
     let subTitle: String
     let unit: String
+    let isIncludeZero: Bool
     
     // Graph values.
     let normalRange: Range
@@ -25,18 +26,19 @@ struct GraphView: View {
     let scorePoints: [ScorePoint]
     let trendLines: [ScorePoint]
     
+    
     var body: some View {
         Chart {
             ForEach(trendLines, id: \.value) { item in
                 LineMark(
-                    x: .value("line-x", item.timestamp?.dayAndMonth ?? ""),
+                    x: .value("line-x", item.timestamp ?? 0),
                     y: .value("line-y", item.value ?? 0)
                 )
             }
             
             ForEach(scorePoints, id: \.value) { item in
                 PointMark(
-                    x: .value("point-x", item.timestamp?.dayAndMonth ?? ""),
+                    x: .value("point-x", item.timestamp ?? 0),
                     y: .value("point-y", item.value ?? 0)
                 )
                 .foregroundStyle(colorScheme == .dark ? .white : .black.opacity(0.6))
@@ -49,8 +51,15 @@ struct GraphView: View {
             .foregroundStyle(normalRangeColor)
         }
         .aspectRatio(1, contentMode: .fit)
-        .chartYScale(domain: .automatic)
-        .chartXAxis(.hidden)
+        .chartYScale(domain: .automatic(includesZero: isIncludeZero))
+        .chartYScale(domain: scoreRange.domain)
+        .chartXScale(domain: trendLines.domain)
+        .chartYAxis {
+            AxisMarks(position: .leading) { _ in
+                AxisValueLabel()
+                AxisGridLine()
+            }
+        }
         .chartYAxisLabel {
             GraphTitleView(
                 unit: unit,
@@ -62,16 +71,13 @@ struct GraphView: View {
             GraphLegend()
                 .padding([.top], 20)
         }
-        .chartYAxis {
-            AxisMarks(position: .leading)
-        }
     }
 }
 
 private struct GraphTitleView: View {
     
     @Environment(\.colorScheme) var colorScheme: ColorScheme
-
+    
     let unit: String
     let title: String
     let subTitle: String
@@ -108,6 +114,12 @@ private struct GraphLegend: View {
     }
 }
 
+private struct CustomDateStyle: FormatStyle {
+    func format(_ value: Double) -> String {
+        return value.dayAndMonth
+    }
+}
+
 #Preview {
     let scorePoints: [ScorePoint] = [
         ScorePoint(value: 85, timestamp: 1689188395.0),
@@ -129,6 +141,7 @@ private struct GraphLegend: View {
         title: "Accuracy",
         subTitle: "Jan-Jul 2024",
         unit: "%",
+        isIncludeZero: true,
         normalRange: Range(lowerBound: 50, upperBound: 100),
         scoreRange: Range(lowerBound: 5, upperBound: 100),
         scorePoints: scorePoints,

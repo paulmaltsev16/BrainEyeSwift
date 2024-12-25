@@ -21,7 +21,8 @@ struct TrendDetailsView: View {
                     title: trendType.rawValue,
                     subTitle: trend.scorePoints?.measurePeriod ?? "",
                     unit: trend.unit?.unitDisplayType ?? "",
-                    normalRange: trend.normalRanges!.first!.range!, // According to the assignment, take the first one.
+                    isIncludeZero: trendType == .accuracy,
+                    normalRange: trend.normalRanges?.first?.range ?? Range(lowerBound: 0, upperBound: 0), // According to the assignment, take the first one.
                     scoreRange: trend.scoreRange ?? Range(lowerBound: 0, upperBound: 0),
                     scorePoints: trend.scorePoints ?? [],
                     trendLines: trend.trendLine ?? []

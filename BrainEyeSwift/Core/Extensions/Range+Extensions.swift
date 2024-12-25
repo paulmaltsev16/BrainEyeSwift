@@ -14,7 +14,6 @@ extension Range {
     }
     
     var domain: ClosedRange<Int> {
-        let lower = (lowerBound ?? 0) < 25 ? 0 : (lowerBound ?? 0)
-        return lower...(upperBound ?? 0)
+        return (lowerBound ?? 0)...(upperBound ?? 0)
     }
 }

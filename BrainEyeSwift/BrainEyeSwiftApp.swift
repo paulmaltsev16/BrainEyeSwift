@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct BrainEyeSwiftApp: App {
-    
     var body: some Scene {
         WindowGroup {
             NavigationView {
