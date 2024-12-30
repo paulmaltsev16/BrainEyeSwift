@@ -1,7 +1,7 @@
 # BrainEye
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/fa338cdb-72e1-4ecc-916e-b896222d2cdc" alt="App logo">
+  <img src="https://github.com/user-attachments/assets/fa338cdb-72e1-4ecc-916e-b896222d2cdc" alt="App logo" width="300" height="300">
 </p>
 
 ## Stack
